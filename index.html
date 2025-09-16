@@ -90,7 +90,7 @@
           </div>
         </div>
       </section>
-      <form id="form" class="form">
+      <form id="form" class="form" novalidate>
         <section id="form-avatar" class="form__section">
           <label for="avatar__image" class="section__avatar"
             >Upload Avatar</label
@@ -122,13 +122,21 @@
           </div>
         </section>
         <section class="form__section name__input">
-          <label for="name">Full Name</label>
+          <label for="input-name">Full Name</label>
           <div class="input__container">
             <input id="input-name" type="text" />
           </div>
         </section>
+         <div class="error__name hidden">
+          <img
+            src="./assets/images/icon-info-orange.svg"
+            alt="icon__info"
+            class="icon__info"
+          />
+          <p class="error__email__text">Name can contain only letters and spaces.</p>
+        </div>
         <section class="form__section email__input">
-          <label for="email">Email Address</label>
+          <label for="input-email">Email Address</label>
           <div class="input__container">
             <input
               id="input-email"
@@ -146,11 +154,19 @@
           <p class="error__email__text">Please enter a valid email address.</p>
         </div>
         <section class="form__section github__input">
-          <label for="github">GitHub Username</label>
+          <label for="github-input">GitHub Username</label>
           <div class="input__container">
             <input id="github-input" type="github" placeholder="@yourusername" />
           </div>
         </section>
+         <div class="error__github hidden">
+          <img
+            src="./assets/images/icon-info-orange.svg"
+            alt="icon__info"
+            class="icon__info"
+          />
+          <p class="error__email__text">Please enter a valid github username.</p>
+        </div>
         <div class="input__container">
           <div class="input__container">
             <button type="submit" class="input__submit">

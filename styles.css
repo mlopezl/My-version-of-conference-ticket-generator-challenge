@@ -301,17 +301,18 @@ input::placeholder {
 .input__submit:hover {
   background-color: var(--Orange-700);
 }
-
-.github__input {
-  margin-bottom: 30px;
-}
-
-.error__email {
+.error__email,
+.error__name,
+.error__github {
   width: 100%;
   display: flex;
   gap: 5px;
   justify-content: flex-start;
   align-items: center;
+}
+
+.error__github{
+ margin-bottom: 30px;
 }
 
 .error__email__text {

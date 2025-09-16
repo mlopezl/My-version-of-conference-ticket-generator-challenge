@@ -10,6 +10,8 @@ const removeImageButton = document.getElementById("remove__image");
 const inputAvatarImage = document.getElementById("avatar__image");
 const inputEmail = document.getElementById("input-email");
 const errorEmail = document.querySelector(".error__email");
+const errorName = document.querySelector(".error__name");
+const errorGithub = document.querySelector(".error__github");
 const uploadDescription = document.querySelector(".upload__description");
 const headerTitle = document.querySelector(".header__title");
 const headerDescription = document.querySelector(".header__description");
@@ -76,6 +78,14 @@ inputAvatarImage.addEventListener("change", () => {
     };
     reader.readAsDataURL(file);
   }
+
+    if (file.size / 1024 > 500) {
+      let icon = uploadDescription.children[0];
+      let text = uploadDescription.children[1];
+      icon.src = "./assets/images/icon-info-orange.svg";
+      text.innerText = "File too large. Please upload a photo under 500 KB.";
+      text.classList.add("error__email__text");
+    }
 });
 
 removeImageButton.addEventListener("click", (e) => {
@@ -138,6 +148,27 @@ inputEmail.addEventListener("input", (e) => {
   }
 });
 
+inputName.addEventListener("input", (e) => {
+  let inputValue = e.target.value;
+  const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ' -]+$/;
+  if (!regexNombre.test(inputValue)) {
+    errorName.classList.remove("hidden");
+    validForm = false;
+  } else {
+    errorName.classList.add("hidden");
+  }
+});
+
+githubInput.addEventListener("input", (e) => {
+  let inputValue = e.target.value;
+  if (!inputValue.startsWith("@")) {
+    errorGithub.classList.remove("hidden");
+    validForm = false;
+  } else {
+    errorGithub.classList.add("hidden");
+  }
+});
+
 function generarTicket() {
   const numero = Math.floor(Math.random() * 100000);
   const cincoDigitos = String(numero).padStart(5, "0");
@@ -146,16 +177,78 @@ function generarTicket() {
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  form.remove();
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
+  let formInputs = document.querySelectorAll("input");
+  let validForm = true;
+  console.log(formInputs);
+  Array.from(formInputs).forEach((el) => {
+      if (!el.value.trim()) {
+      if (el.type === "email") errorEmail.classList.remove("hidden");
+      if (el.id === "github-input") errorGithub.classList.remove("hidden");
+      if (el.type === "text") errorName.classList.remove("hidden");
+      if (el.type === 'file') {
+        uploadDescription.children[0].src = "./assets/images/icon-info-orange.svg";
+        uploadDescription.children[1].classList.add('error__email__text')
+      }
+      validForm = false;
+      return;
+  }
+
+    if (el.type === "email") {
+      let elValue = el.value;
+      let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (regex.test(elValue) === false) {
+        errorEmail.classList.remove("hidden");
+        validForm = false;
+      } else {
+        errorEmail.classList.add("hidden");
+      }
+    } else if (el.id === "github-input") {
+      let elValue = el.value;
+      if (!elValue.startsWith("@")) {
+        errorGithub.classList.remove("hidden");
+        validForm = false;
+      } else {
+        errorGithub.classList.add("hidden");
+      }
+    } else if (el.type === "text") {
+      elValue = el.value;
+      const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ' -]+$/;
+      if (!regexNombre.test(elValue)) {
+        errorName.classList.remove("hidden");
+        validForm = false;
+      } else {
+        errorName.classList.add("hidden");
+      }
+    }
   });
-  headerTitle.innerHTML = `Congrats, <span>${inputName.value}</span> Your ticket is ready.`;
-  headerDescription.innerHTML = `We've emailed your ticket to <br> <span>${inputEmail.value}</span> and will send updates <br>  in the run up to the event.`;
-  ticketSection.classList.remove("hidden");
-  ticketName.innerHTML = inputName.value;
-  ticketImage.src = URL.createObjectURL(inputAvatarImage.files[0]);
-  ticketNumber.innerText = generarTicket();
-  ticketGitHubUser.innerText = githubInput.value;
+
+   const file = inputAvatarImage.files[0];
+  if (file) {
+    const fileSizeKB = file.size / 1024;
+    if (fileSizeKB > 500) {
+      let icon = uploadDescription.children[0];
+      let text = uploadDescription.children[1];
+      icon.src = "./assets/images/icon-info-orange.svg";
+      text.innerText = "File too large. Please upload a photo under 500 KB.";
+      text.classList.add("error__email__text");
+      validForm = false;
+    }
+  } else {
+    validForm = false;
+  }
+
+  if (validForm) {
+    form.remove();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    headerTitle.innerHTML = `Congrats, <span>${inputName.value}</span> Your ticket is ready.`;
+    headerDescription.innerHTML = `We've emailed your ticket to <br> <span>${inputEmail.value}</span> and will send updates <br>  in the run up to the event.`;
+    ticketSection.classList.remove("hidden");
+    ticketName.innerHTML = inputName.value;
+    ticketImage.src = URL.createObjectURL(inputAvatarImage.files[0]);
+    ticketNumber.innerText = generarTicket();
+    ticketGitHubUser.innerText = githubInput.value;
+  }
 });
